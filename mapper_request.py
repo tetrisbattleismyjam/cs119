@@ -8,7 +8,7 @@ def main(argv):
 
     try:
         while line:
-            request = line.split()[request_index].lstrip("\"")
+            request = line.split()[request_index]
             print ("LongValueSum:" + request.lower() + "\t" + "1")
             line = sys.stdin.readline()
 
