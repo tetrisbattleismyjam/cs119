@@ -9,7 +9,7 @@ def main(argv):
     try:
         while line:
             request = line.split()[request_index].lstrip("\"")
-            print ("LongValueSum:" + request + "\t" + "1")
+            print ("LongValueSum:" + request.lower() + "\t" + "1")
             line = sys.stdin.readline()
 
     except EOFError as error:
