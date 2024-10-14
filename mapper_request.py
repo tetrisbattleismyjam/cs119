@@ -13,6 +13,10 @@ def main(argv):
 
     except EOFError as error:
         return None
+
+    except:
+        # ignore 
+        pass
     
 if __name__ == "__main__":
     main(sys.argv)
