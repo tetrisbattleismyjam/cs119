@@ -3,6 +3,7 @@ import sys
 
 def main(argv):
     line = sys.stdin.readline()
+    line = sys.stdin.readline() # dump empty first line
     request_index = 5
 
     try:
@@ -13,10 +14,6 @@ def main(argv):
 
     except EOFError as error:
         return None
-
-    except:
-        # ignore 
-        pass
     
 if __name__ == "__main__":
     main(sys.argv)
