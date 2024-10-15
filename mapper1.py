@@ -11,7 +11,6 @@ def main(argv):
         while line:
             request = line.split()[request_index][1:]
             print ("LongValueSum:" + request + "\t" + "1")
-            print ("LongValueSum:'TOTAL'\t1" 
             line = sys.stdin.readline()
 
     except EOFError as error:
