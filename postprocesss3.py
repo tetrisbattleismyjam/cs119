@@ -6,14 +6,14 @@ def main(argv):
   filepath = argv[1]
   file_ = open(filepath)
   line = file_.readline()
-  counts = collections.Counter()
+  counts = []
   
   while line:
     key, count = line.split('\t')
     count = int(count)
-    counts.update({str(key), count})
-    line = file_.readline()
+    counts.append((key, count))
 
-  print(counts.most_common(5))
+  sorted_counts = sorted(counts, key=lambda a: a[1])
+  print(sorted_counts[:5])
 if __name__ == "__main__":
   main(sys.argv)
