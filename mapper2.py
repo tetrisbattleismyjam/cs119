@@ -8,7 +8,7 @@ def main(argv):
     
     try:
         while line:
-            code = int(line.split()[code_index])
+            code = line.split()[code_index]
             code = int(code)
 
             if code >= 100 and code < 200:
