@@ -10,7 +10,7 @@ stopwords_list = requests.get("https://gist.githubusercontent.com/rg089/35e00abf
 stopwords = list(set(stopwords_list.decode().splitlines()))
 
 def main(argv):
-    filename = os.environ['mapreduce_map_input_file']
+    filename = os.environ['map_input_file']
     print(filename + '\t' + 1)
         
 # Used in clean_text to remove stopwords.
