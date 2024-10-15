@@ -25,5 +25,5 @@ def calculatePercentages(word_count):
     ratio = word_count[word] / total_count
     print(word + '\t' + ratio)
 
-if __name__ = "__main__":
+if __name__ == "__main__":
   main(sys.argv)
