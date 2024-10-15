@@ -15,6 +15,5 @@ def main(argv):
     line = file_.readline()
 
   print(counts.most_common(5))
-  print(counts)
 if __name__ == "__main__":
   main(sys.argv)
