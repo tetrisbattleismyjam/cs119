@@ -14,7 +14,7 @@ def main(argv):
     counts.append((key, count))
     line = file_.readline()
 
-  sorted_counts = sorted(counts, key=lambda a: a[1])
+  sorted_counts = sorted(counts, key=lambda a: a[1], reverse=True)
   print(sorted_counts[:5])
 if __name__ == "__main__":
   main(sys.argv)
