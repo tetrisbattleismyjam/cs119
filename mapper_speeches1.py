@@ -6,6 +6,8 @@ import string
 import re
 import collections
 
+
+# Create stop list and valence dictionary for later use
 stopwords_list = requests.get("https://gist.githubusercontent.com/rg089/35e00abf8941d72d419224cfd5b5925d/raw/12d899b70156fd0041fa9778d657330b024b959c/stopwords.txt").content
 stopwords = list(set(stopwords_list.decode().splitlines()))
 valence_list = requests.get("https://raw.githubusercontent.com/fnielsen/afinn/master/afinn/data/AFINN-en-165.txt").text
@@ -19,10 +21,14 @@ for line in valence_list.split('\n'):
 
                    
 def main(argv):
+    # get file names of lines
     filename = os.environ['map_input_file']
     prez = filename.split('_')[0]
+
+    # read in the lines
     line = sys.stdin.readline()
     while line:
+        # create mapping of key president name to (valence, count) value.
         valence, count = valence(line)
         print(prez + '\t' + str(valence) + '\t' + str(count))
 
