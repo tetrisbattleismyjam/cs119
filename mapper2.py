@@ -24,8 +24,8 @@ def main(argv):
             else:
                 raise ValueError("bad response code")
               
-        print (response + "\t" + "1")
-        line = sys.stdin.readline()
+            print (response + "\t" + "1")
+            line = sys.stdin.readline()
 
     except EOFError as error:
         return None
