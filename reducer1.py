@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import collections
+import sys
 
 def main(argv):
   word_count = collections.Counter()
