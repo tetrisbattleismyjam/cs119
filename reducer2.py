@@ -27,7 +27,7 @@ def main(argv):
       elif count >= 500 and count < 600:
         response = 'server error'
 
-      else
+      else:
         response = 'BADLINE'
         
       code_count.update({response: count})
