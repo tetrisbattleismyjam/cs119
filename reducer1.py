@@ -14,12 +14,11 @@ def main(argv):
       count = int(count)
       word_count.update({word: count})
     except:
-      pass #ignore line
+      continue # ignore this line silently
       
   calculatePercentages(word_count)
 
 def calculatePercentages(word_count):
-  print(word_count)
   total_count = word_count.total()
 
   for word in word_count:
