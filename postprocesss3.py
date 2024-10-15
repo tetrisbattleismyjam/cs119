@@ -12,7 +12,7 @@ def main(argv):
     key, count = line.split('\t')
     count = int(count)
     counts.append((key, count))
-    line = file.readline()
+    line = file_.readline()
 
   sorted_counts = sorted(counts, key=lambda a: a[1])
   print(sorted_counts[:5])
