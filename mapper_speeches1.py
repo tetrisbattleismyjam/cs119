@@ -23,8 +23,8 @@ def main(argv):
     prez = filename.split('_')[0]
     line = sys.stdin.readline()
     while line:
-        phrase = clean_text(line.split())
-        print(prez + '\t' + phrase)
+        valence, count = valence(line)
+        print(prez + '\t' + str(valence) + '\t' + str(count))
 
 def valence(text):
     return calc_valence(clean_text(text))
@@ -34,7 +34,7 @@ def calc_valence(text):
     for word in text.split(' '):
         valence += valency.get(word, default=0)
         
-    return valence
+    return (valence, len(text.split(' ')))
         
     
 # Used in clean_text to remove stopwords.
