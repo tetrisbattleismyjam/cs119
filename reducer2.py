@@ -12,7 +12,7 @@ def main(argv):
   
     try:
       code = int(code)
-      count = int(code)
+      count = int(count)
 
       if code >= 100 and code < 200:
         response = 'informational'
