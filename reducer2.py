@@ -11,20 +11,20 @@ def main(argv):
     code, count = line_.split('\t')
   
     try:
-      count = int(count)
-      if count >= 100 and count < 200:
+      code = int(code)
+      if code >= 100 and code < 200:
         response = 'informational'
         
-      elif count >= 200 and count < 300:
+      elif code >= 200 and code < 300:
         response = 'successful'
         
-      elif count >= 300 and count < 400:
+      elif code >= 300 and code < 400:
         response = 'redirection'
         
-      elif count >= 400 and count < 500:
+      elif code >= 400 and code < 500:
         response = 'client error'
         
-      elif count >= 500 and count < 600:
+      elif code >= 500 and code < 600:
         response = 'server error'
 
       else:
