@@ -22,7 +22,7 @@ def calculatePercentages(word_count):
   total_count = word_count.total()
 
   for word in word_count:
-    ratio = word_count[word] / total_count
+    ratio = word_count[word]
     print(word + '\t' + str(ratio))
 
 if __name__ == "__main__":
