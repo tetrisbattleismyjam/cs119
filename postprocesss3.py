@@ -11,10 +11,10 @@ def main(argv):
   while line:
     key, count = line.split('\t')
     count = int(count)
-    counts.update({key, count})
+    counts.update({str(key), count})
     line = file_.readline()
 
   print(counts.most_common(5))
-          
+  print(counts)
 if __name__ == "__main__":
   main(sys.argv)
