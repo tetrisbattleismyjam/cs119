@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys
 import collections
-import np
 
 def main(argv):
   filepath = argv[1]
