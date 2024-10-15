@@ -4,7 +4,7 @@ import sys
 def main(argv):
     line = sys.stdin.readline()
     line = sys.stdin.readline()
-    key_index = 1
+    key_index = 0
 
     try:
         while line:
