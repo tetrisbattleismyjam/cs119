@@ -10,9 +10,10 @@ stopwords_list = requests.get("https://gist.githubusercontent.com/rg089/35e00abf
 stopwords = list(set(stopwords_list.decode().splitlines()))
 
 def main(argv):
-    filename = os.listdir()
-    for name in filename:
-        print(name + '\t' + '1')
+    line = sys.stdin.readline()
+    while line:
+        print(line + '\t' + '1')
+        line = sys.stdin.readline()
         
 # Used in clean_text to remove stopwords.
 def remove_stopwords(words):
