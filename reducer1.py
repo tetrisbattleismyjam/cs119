@@ -12,6 +12,8 @@ def main(argv):
     try:
       count = int(count)
       word_count.update({word: count})
+    except:
+      pass #ignore line
       
   calculatePercentages(word_count)
 
