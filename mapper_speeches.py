@@ -12,7 +12,7 @@ stopwords = list(set(stopwords_list.decode().splitlines()))
 def main(argv):
     filename = os.listdir()
     for name in filename:
-        print(name + '\t' + 1)
+        print(name + '\t' + '1')
         
 # Used in clean_text to remove stopwords.
 def remove_stopwords(words):
