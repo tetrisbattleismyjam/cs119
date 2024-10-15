@@ -10,6 +10,7 @@ def main(argv):
   
   while line:
     word, count = line.split('\t')
+    count = int(count)
     total_count += count
     word_counts[word] = count
     line = file_.readline()
