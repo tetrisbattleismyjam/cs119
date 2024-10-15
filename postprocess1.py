@@ -12,9 +12,10 @@ def main(argv):
     word, count = line.split('\t')
     total_count += count
     word_counts[word] = count
+    line = file_.readline()
 
   for key in word_counts:
-    print(key, word_counts[key]/total_count
+    print(key, word_counts[key]/total_count)
           
 if __name__ == "__main__":
   main(sys.argv)
