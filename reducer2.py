@@ -38,7 +38,7 @@ def main(argv):
 
 def eval_codes(code_count):
   for response in code_count:
-    print('%s\t%s' % (word,code_count[word]))
+    print('%s\t%s' % (response,code_count[response]))
 
 if __name__ == "__main__":
   main(sys.argv)
