@@ -30,7 +30,7 @@ def main(argv):
     except EOFError as error:
         return None
     except ValueError:
-        continue
+        pass
     
 if __name__ == "__main__":
     main(sys.argv)
