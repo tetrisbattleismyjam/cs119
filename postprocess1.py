@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sys
+
 
 def main(argv):
   filepath = argv[1]
