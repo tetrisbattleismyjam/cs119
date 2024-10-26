@@ -49,4 +49,5 @@ for i in range(max_queries * max_days):
     duplicate_counts.update([usr])
   else:
     queries.update([(usr + qry, 1)])
-  
+
+print(averages)
