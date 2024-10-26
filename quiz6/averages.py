@@ -44,7 +44,7 @@ for i in range(max_queries * max_days):
   qry = re.search(qry_pattern, line) 
 
   duplicate = queries.setdefault(usr + qry, 0)
-
+  print('Receieved %s from %s' % (usr, qry))
   if duplicate:
     duplicate_counts.update([usr])
   else:
