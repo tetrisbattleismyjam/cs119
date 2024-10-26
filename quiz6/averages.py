@@ -40,8 +40,8 @@ for i in range(max_queries * max_days):
   # read stream and update running tallies
   line = sys.stdin.readline()
   
-  usr = re.search(usr_pattern, line)
-  qry = re.search(qry_pattern, line) 
+  usr = re.search(usr_pattern, line).group()
+  qry = re.search(qry_pattern, line).group()
 
   duplicate = queries.setdefault(usr + qry, 0)
   print('Receieved %s from %s' % (usr, qry))
