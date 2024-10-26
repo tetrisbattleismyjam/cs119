@@ -26,9 +26,9 @@ max_days = 3
 max_users = 6
 day_counter = 0
 
-for i in range(max_queries * max_days):
+for i in range(max_queries * max_days * max_users):
   # if this is a new day, reset counts. compute new average
-  if (i + 1) % max_queries == 0:
+  if (i + 1) % (max_users * max_queries) == 0:
     day_counter += 1
 
     for user_, dups in duplicate_counts.items():
