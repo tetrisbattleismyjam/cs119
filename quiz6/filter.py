@@ -68,7 +68,13 @@ if __name__ == "__main__":
       .load()
 
     # create dataframe evaluating sentence against bloom filter
-    # lines_eval = lines.select(
-    print(lines.columns)
+    lines_eval = lines.select(col('value').alias('sentence'), bloomUDF(col('value')).alias('eval'))
 
     # Transform into columns sentence, bloom count.
+    query = lines_eval\
+        .writeStream\
+        .outputMode('complete')\
+        .format('console')\
+        .start()
+
+    query.awaitTermination()
