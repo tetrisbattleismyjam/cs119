@@ -4,6 +4,7 @@ import base64
 import pyspark
 
 # from BitVector import BitVector as bv
+from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
@@ -34,7 +35,7 @@ def filter_str(path):
     
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: structured_network_wordcount.py <hostname> <port> <bloom filter path>", file=sys.stderr)
+        print("Usage: structured_network_wordcount.py <hostname> <port> <bloom filter path> <file name>", file=sys.stderr)
         sys.exit(-1)
 
     print ('Argv', sys.argv)
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     host = sys.argv[1]
     port = int(sys.argv[2])
     bloom_path = sys.argv[3]
+    file_name = sys.argv[4]
 
     print("bloom HDFS path: ", bloom_path)
     # get the bloom filter encoded as base64. Decode
@@ -49,7 +51,9 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.setLogLevel('WARN')
-    print(filter_str(bloom_path))
+
+    abs_filepath = SparkFiles.get(file_name)
+    print(filter_str(abs_filepath))
 
     # 
     # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
