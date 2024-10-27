@@ -8,7 +8,8 @@ from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import unbase64, decode
+from pyspark.sql.functions import unbase64, decode, udf, col
+from pyspark.sql.types import IntegerType
 
 array_size = 1952
 def hash1(word):
@@ -26,6 +27,15 @@ def hash3(word):
 def get_indices(word):
   return [hash1(word), hash2(word), hash3(word)]
 
+def eval_sentence(sentence, filter):
+  total = 0
+  
+  for word in sentence:
+    indices = get_indices(word)
+    total += sum([filter[i] for i in indices])
+
+  return total
+      
 if __name__ == "__main__":
     if len(sys.argv) != 5:
         print("Usage: structured_network_wordcount.py <hostname> <port> <bloom filter path> <file name>", file=sys.stderr)
@@ -37,24 +47,28 @@ if __name__ == "__main__":
     port = int(sys.argv[2])
     bloom_path = sys.argv[3]
     file_name = sys.argv[4]
-  
-    # create DataFrame for the input lines coming in to the given host and port
+
+    # set up the spark session
     spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.setLogLevel('WARN')
-  
-
-    abs_filepath = SparkFiles.get(file_name)
-
-    print("bloom HDFS path: ", bloom_path)
-    # get the bloom filter encoded as base64. Decode
+    
+    # get the bloom filter encoded as base64. Decode and reprsent as an RDD
     df = spark.read.text(bloom_path)
     rdd_ = df.select(decode(unbase64('value'),'UTF-8').alias('value')).rdd
-    bloom_filter = rdd_.map(lambda a: a['value']).flatMap(lambda a: [char for char in a])
-    print(bloom_filter.collect())
+    bloom_filter = rdd_.map(lambda a: a['value']).flatMap(lambda a: [char for char in a]).collect()
+    bloomUDF = udf(lambda a: eval_sentence(a), IntegerType())
   
+    # create DataFrame for the input lines coming in to the given host and port
+    lines = spark\
+      .readStream\
+      .format('socket')\
+      .option('host', host)\
+      .option('port', port)\
+      .load()
 
-    # 
-    # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
+    # create dataframe evaluating sentence against bloom filter
+    # lines_eval = lines.select(
+    print(lines.columns)
 
     # Transform into columns sentence, bloom count.
