@@ -1,7 +1,7 @@
 import sys, time
 
 import pyspark
-from BitVector import BitVector as bv
+# from BitVector import BitVector as bv
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
