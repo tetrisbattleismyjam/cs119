@@ -28,11 +28,6 @@ def hash3(word):
 def get_indices(word):
   return [hash1(word), hash2(word), hash3(word)]
 
-def filter_str(path):
-    f = open(path)
-    line = f.readline()
-    return base64.b64decode(line).decode()
-    
 if __name__ == "__main__":
     if len(sys.argv) != 5:
         print("Usage: structured_network_wordcount.py <hostname> <port> <bloom filter path> <file name>", file=sys.stderr)
@@ -44,16 +39,23 @@ if __name__ == "__main__":
     port = int(sys.argv[2])
     bloom_path = sys.argv[3]
     file_name = sys.argv[4]
-
-    print("bloom HDFS path: ", bloom_path)
-    # get the bloom filter encoded as base64. Decode
+  
     # create DataFrame for the input lines coming in to the given host and port
     spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.setLogLevel('WARN')
+  
 
     abs_filepath = SparkFiles.get(file_name)
     print(filter_str(abs_filepath))
+
+    print("bloom HDFS path: ", bloom_path)
+    # get the bloom filter encoded as base64. Decode
+    df = spark.read.text(bloom_path)
+    rdd_ = df.select(decode(unbase64('value'),'UTF-8').alias('value')).rdd
+    bloom_filter = rdd_.map(lambda a: a['value']).flatMap(lambda a: [char for char in a])
+    print(bloom_filter.collect())
+  
 
     # 
     # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
