@@ -49,7 +49,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.setLogLevel('WARN')
-    print(filter_tr(bloom_path))
+    print(filter_str(bloom_path))
 
     # 
     # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
