@@ -46,7 +46,7 @@ if __name__ == "__main__":
     spark.sparkContext.setLogLevel('WARN')
   
 
-    abs_filepath = SparkFiles.get(file_name)s
+    abs_filepath = SparkFiles.get(file_name)
 
     print("bloom HDFS path: ", bloom_path)
     # get the bloom filter encoded as base64. Decode
