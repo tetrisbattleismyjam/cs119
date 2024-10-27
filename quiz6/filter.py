@@ -24,7 +24,7 @@ if __name__ == "__main__":
   
     # get the bloom filter encoded as base64. Decode
     # create DataFrame for the input lines coming in to the given host and port
-    spark = SparkSession.builder.appName("CensorshipBoard9000").geOrCreate()
+    spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.listFiles
     # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
