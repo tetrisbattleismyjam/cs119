@@ -8,9 +8,7 @@ from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import unbase64
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
+from pyspark.sql.functions import unbase64, decode
 
 array_size = 1952
 def hash1(word):
