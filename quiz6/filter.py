@@ -34,7 +34,7 @@ def filter_str(path):
     return base64.b64decode(line).decode()
     
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print("Usage: structured_network_wordcount.py <hostname> <port> <bloom filter path> <file name>", file=sys.stderr)
         sys.exit(-1)
 
