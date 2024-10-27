@@ -26,7 +26,8 @@ if __name__ == "__main__":
     # create DataFrame for the input lines coming in to the given host and port
     spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
-    spark.sparkContext.listFiles
+    spark.sparkContext.setLogLevel('WARN')
+    print(spark.sparkContext.listFiles)
     # lines = spark.readStream.format("socket").option("host", hostt).option("port", port).load()
 
     # Transform into columns sentence, bloom count.
