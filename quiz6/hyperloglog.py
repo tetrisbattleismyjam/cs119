@@ -25,6 +25,7 @@ def bin_of(hash):
 def leading_zeros(hash):
     bin_ = bin(hash)
     bin_string = str(bin_)[2:]
+    print('counting leading 0 of %s' % bin_string)
     count = 0
     for bit in bin_string:
         if bit == 0:
@@ -45,6 +46,6 @@ while True:
     usr_hash = hash_64(usr)
     usr_bin = bin_of(usr_hash)
     zero_count = leading_zeros(usr_hash >> bin_size)
-    print('%s hashed to %s put in %s with count %d' % (usr, usr_hash, usr_bin, zero_count))
+    # print('%s hashed to %s put in %s with count %d' % (usr, usr_hash, usr_bin, zero_count))
     counts[usr_bin] = max(zero_count, counts[usr_bin])
     print(current_estimate())
