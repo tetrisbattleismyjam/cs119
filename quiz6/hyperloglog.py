@@ -45,7 +45,7 @@ while True:
     
     usr_hash = hash_64(usr)
     usr_bin = bin_of(usr_hash)
-    zero_count = leading_zeros(usr_hash >> bin_size)
+    lead_count = leading_ones(usr_hash >> bin_size)
     # print('%s hashed to %s put in %s with count %d' % (usr, usr_hash, usr_bin, zero_count))
-    counts[usr_bin] = max(zero_count, counts[usr_bin])
+    counts[usr_bin] = max(lead_count, counts[usr_bin])
     print(current_estimate())
