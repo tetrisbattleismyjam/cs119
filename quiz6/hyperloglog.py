@@ -39,7 +39,7 @@ def current_estimate():
 
 # Read in the stream
 line = sys.stdin.readline()
-usr = re.search(usr_pattern, line)
+usr = re.search(usr_pattern, line).group()
 
 usr_hash = hash_64(usr)
 usr_bin = bin_of(usr_hash)
