@@ -55,7 +55,7 @@ if __name__ == "__main__":
     bloom_filter = rdd_.map(lambda a: a['value']).flatMap(lambda a: [char for char in a]).collect()
     bloomUDF = udf(lambda a: eval_sentence(a, bloom_filter), IntegerType())
   
-    # create DataFrame for the input lines coming in to the given host and port
+    # create DataFrame for the input lines coming in to the given host and port. Code copied from spark example
     lines = spark\
       .readStream\
       .format('socket')\
@@ -70,16 +70,13 @@ if __name__ == "__main__":
     # filter out the sentences with curse words
     filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
 
-    # Explode into words because this makes it easier to read
-    # exploded = lines.select(explode(split(lines.value, ' ')).alias('word'))
-    # counts = exploded.groupBy('word').count()
                                                                               
-    # Transform into columns sentence, bloom count. Output only newly edited rowss
+    # Transform into columns sentence, bloom count. Output only newly edited rows. output is set to 
+    # 'append' by default so only updates to the filtered dataframe are shown
     query = filtered\
         .writeStream\
         .format('console')\
         .option('truncate', False)\
         .start()
-        #.outputMode('complete')\
 
     query.awaitTermination()
