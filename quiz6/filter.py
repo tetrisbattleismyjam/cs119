@@ -12,26 +12,22 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import unbase64, decode, udf, col, explode, split
 from pyspark.sql.types import IntegerType
 
-array_size = 640
+array_size = 1264
 def hash1(word):
   return mmh3.hash(word)
 
 def hash2(word):
-  word_sum = 1 + sum(map(lambda a: ord(a) + 23, word)) * 101
-  return word_sum % array_size
-
-def hash3(word):
-  word_sum = sum(map(lambda a: ord(a) * 89, word))
-  return word_sum % array_size
+  return hash(word)
 
 def get_indices(word):
-  return [hash1(word), hash2(word), hash3(word)]
+  return [hash1(word) % array_size, 
+          hash2(word) % array_size]
 
 def eval_sentence(sentence, filter):
   total = 0
   
   for word in sentence.split(' '):
-    indices = [hash1(word) % array_size]
+    indices = get_indices(word)
     total += sum([int(filter[i]) for i in indices])
 
   return total
