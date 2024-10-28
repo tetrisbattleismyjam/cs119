@@ -68,7 +68,8 @@ if __name__ == "__main__":
       .load()
 
     # create dataframe evaluating sentence against bloom filter
-    lines_eval = lines.select(col('value').alias('sentence'), bloomUDF(col('value')).alias('eval'))
+    lines_eval = lines.select(col('value').alias('sentence'))
+    # lines_eval = lines.select(col('value').alias('sentence'), bloomUDF(col('value')).alias('eval'))
 
     # filter out the sentences with curse words
     # filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
