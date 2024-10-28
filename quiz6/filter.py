@@ -71,15 +71,15 @@ if __name__ == "__main__":
     lines_eval = lines.select(col('value').alias('sentence'), bloomUDF(col('value')).alias('eval'))
 
     # filter out the sentences with curse words
-    filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
+    # filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
 
     # Explode into words because this makes it easier to read
-    # word_count = filtered.select(explode(split(filtered.sentence, ' ')).alias('word'))\
-    #                      .groupBy(col('word'))\
-    #                      .count()
+    word_count = lines_eval.select(explode(split(lines_eval.sentence, ' ')).alias('word'))\
+                          .groupBy(col('word'))\
+                          .count()
                                                                               
     # Transform into columns sentence, bloom count. Output only newly edited rowss
-    query = filtered\
+    query = word_count\
         .writeStream\
         .outputMode('update')\
         .format('console')\
