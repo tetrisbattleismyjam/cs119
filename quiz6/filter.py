@@ -70,8 +70,16 @@ if __name__ == "__main__":
     # create dataframe evaluating sentence against bloom filter
     lines_eval = lines.select(col('value').alias('sentence'), bloomUDF(col('value')).alias('eval'))
 
-    # Transform into columns sentence, bloom count.
-    query = lines_eval\
+    # filter out the sentences with curse words
+    filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
+
+    # Explode into words because this makes it easier to read
+    word_count = filtered.select(explode(split(col('sentence'), ' ')).alias(col('word')))\
+                          .groupBy(col('word'))\
+                          .count()
+                                                                              
+    # Transform into columns sentence, bloom count. Output only newly edited rowss
+    query = word_count\
         .writeStream\
         .format('console')\
         .start()
