@@ -30,7 +30,7 @@ def get_indices(word):
 def eval_sentence(sentence, filter):
   total = 0
   
-  for word in split(sentence, ' '):
+  for word in sentence.split(' '):
     indices = get_indices(word)
     total += sum([int(filter[i]) for i in indices])
 
