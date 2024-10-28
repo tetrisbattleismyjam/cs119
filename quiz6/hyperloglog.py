@@ -25,7 +25,7 @@ def bin_of(hash):
 def leading_ones(hash):
     bin_ = bin(hash)
     bin_string = str(bin_)[2:]
-    print('counting leading 0 of %s' % bin_string)
+    print('counting leading 0 of %s' % bin_string[:10])
     count = 0
     for bit in bin_string:
         if bit == 1:
