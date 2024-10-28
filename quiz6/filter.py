@@ -83,6 +83,7 @@ if __name__ == "__main__":
         .writeStream\
         .outputMode('complete')\
         .format('console')\
+        .option('truncate', False)\
         .start()
 
     query.awaitTermination()
