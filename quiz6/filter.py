@@ -8,7 +8,7 @@ from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import unbase64, decode, udf, col
+from pyspark.sql.functions import unbase64, decode, udf, col, explode
 from pyspark.sql.types import IntegerType
 
 array_size = 1952
