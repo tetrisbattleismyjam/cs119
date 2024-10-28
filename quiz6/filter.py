@@ -73,7 +73,7 @@ if __name__ == "__main__":
     # Transform into columns sentence, bloom count.
     query = lines_eval\
         .writeStream\
-        .outputMode('complete')\
+        #.outputMode('append')\
         .format('console')\
         .start()
 
