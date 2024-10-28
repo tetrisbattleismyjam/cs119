@@ -74,7 +74,7 @@ if __name__ == "__main__":
     filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
 
     # Explode into words because this makes it easier to read
-    word_count = filtered.select(explode(split(col('sentence'), ' ')).alias(col('word')))\
+    word_count = filtered.select(explode(split(filtered.sentence, ' ')).alias(col('word')))\
                           .groupBy(col('word'))\
                           .count()
                                                                               
