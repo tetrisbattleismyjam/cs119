@@ -35,7 +35,7 @@ def leading_zeros(hash):
     return count
 
 def current_estimate():
-    return 0.79 * bin_count * sum(1/(2 ** est) for est in counts)
+    return 0.79 * bin_count * (bin_count /  sum(1/(2 ** est) for est in counts))
 
 # Read in the stream
 while True:
