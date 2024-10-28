@@ -13,13 +13,10 @@ n_queries = 60         # How many different queries (or messages) a sender can s
 
 dispatcher = Dispatcher()
 sender_names = shuffle(['sndr%04d' % i for i in range(n_senders)])
-senders = [dispatcher.add_sender(Sender(sender_name, n_queries, n_senders*1.0, n_senders*1.0)) for sender_name in sender_names]
+senders = [dispatcher.add_sender(Sender(sender_name, n_queries, n_senders*0.1, n_senders*0.1)) for sender_name in sender_names]
 counter = 0
 
 for ev in dispatcher.launch():
-    for sender in senders:
-      mean_, std_ = sender.delay
-      sender.delay = (max(0.5, mean_ - 1), max(0.5, std_ - 1))
       
     print(ev, flush=True)
     max_evs -= 1
