@@ -19,7 +19,7 @@ counter = 0
 for ev in dispatcher.launch():
     for sender in senders:
       mean, std = sender.delay
-      sender.delay = (max(mean, mean - 0.3), std)
+      sender.delay = (max(0.3, mean - 0.3), std)
       
     print(ev, flush=True)
     max_evs -= 1
