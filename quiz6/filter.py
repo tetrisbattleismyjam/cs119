@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # Transform into columns sentence, bloom count. Output only newly edited rowss
     query = word_count\
         .writeStream\
-        .outputMode('update')\
+        .outputMode('complete')\
         .format('console')\
         .start()
 
