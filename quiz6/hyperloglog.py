@@ -25,7 +25,7 @@ def bin_of(hash):
 def leading_ones(hash):
     bin_ = bin(hash)
     bin_string = str(bin_)[2:]
-    print('counting leading 0 of %s' % bin_string[:10])
+    print('counting leading 1 of %s' % bin_string[:10])
     count = 0
     for bit in bin_string:
         if bit == 1:
@@ -46,6 +46,7 @@ while True:
     usr_hash = hash_64(usr)
     usr_bin = bin_of(usr_hash)
     lead_count = leading_ones(usr_hash >> bin_size)
+    print('counted %d' % lead_count)
     # print('%s hashed to %s put in %s with count %d' % (usr, usr_hash, usr_bin, zero_count))
     counts[usr_bin] = max(lead_count, counts[usr_bin])
     print(current_estimate())
