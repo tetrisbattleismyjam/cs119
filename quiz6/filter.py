@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     # Explode into words because this makes it easier to read
     exploded = lines_eval.select(explode(split(lines_eval.sentence, ' ')).alias('word'))
-    counts = exploded.groupBy(col('word')).count()
+    counts = exploded.groupBy('word').count()
                                                                               
     # Transform into columns sentence, bloom count. Output only newly edited rowss
     query = counts\
