@@ -13,7 +13,7 @@ n_queries = 60         # How many different queries (or messages) a sender can s
 
 dispatcher = Dispatcher()
 sender_names = shuffle(['sndr%04d' % i for i in range(n_senders)])
-senders = [dispatcher.add_sender(Sender(sender_name, n_queries, n_senders*0.1, n_senders*0.1)) for sender_name in sender_names]
+senders = [dispatcher.add_sender(Sender(sender_name, n_queries, n_senders*0.001, n_senders*0.001)) for sender_name in sender_names]
 counter = 0
 
 for ev in dispatcher.launch():
