@@ -49,7 +49,7 @@ if __name__ == "__main__":
     file_name = sys.argv[4]
 
     # set up the spark session
-    spark = SparkSession.builder.appName("CensorshipBoard9000").getOrCreate()
+    spark = SparkSession.builder.appName("CensorshipBoard9000").master("local[*]").getOrCreate()
     spark.sparkContext.addFile(bloom_path)
     spark.sparkContext.setLogLevel('WARN')
     
