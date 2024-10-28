@@ -38,12 +38,13 @@ def current_estimate():
     return 0.79 * bin_count * sum(1/(2 ** est) for est in counts)
 
 # Read in the stream
-line = sys.stdin.readline()
-usr = re.search(usr_pattern, line).group()
-
-usr_hash = hash_64(usr)
-usr_bin = bin_of(usr_hash)
-zero_count = leading_zeros(usr_hash >> bin_size)
-print(usr)
-counts[usr_bin] = max(zero_count, counts[usr_bin])
-print(current_estimate())
+while True:
+    line = sys.stdin.readline()
+    usr = re.search(usr_pattern, line).group()
+    
+    usr_hash = hash_64(usr)
+    usr_bin = bin_of(usr_hash)
+    zero_count = leading_zeros(usr_hash >> bin_size)
+    print(usr)
+    counts[usr_bin] = max(zero_count, counts[usr_bin])
+    print(current_estimate())
