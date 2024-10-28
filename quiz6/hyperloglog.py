@@ -10,7 +10,7 @@ from hashlib import shake_128
 usr_pattern = re.compile('sndr[0-9]{4}')
 qry_pattern = re.compile('qry[0-9]{4}')
 
-bin_size = 8 # number of bits representing which bin 
+bin_size = 4 # number of bits representing which bin 
 bin_count = (1 << bin_size) - 1 # max number that can be held in bin_size bits
 counts = np.zeros(bin_count) # current estimate for each bin
 
