@@ -22,13 +22,13 @@ def bin_of(hash):
     bin_mask = (1 << bin_size) - 1 # get a bin string of bin_size '1's
     return hash & bin_mask # retrieve the first bit of size 'bin_size'
 
-def leading_zeros(hash):
+def leading_ones(hash):
     bin_ = bin(hash)
     bin_string = str(bin_)[2:]
     print('counting leading 0 of %s' % bin_string)
     count = 0
     for bit in bin_string:
-        if bit == 0:
+        if bit == 1:
             count += 1
         else: 
             return count
