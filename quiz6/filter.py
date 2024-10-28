@@ -2,6 +2,7 @@
 import sys, time
 import base64
 import pyspark
+import mmh3
 
 # from BitVector import BitVector as bv
 from pyspark import SparkFiles
@@ -11,10 +12,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import unbase64, decode, udf, col, explode, split
 from pyspark.sql.types import IntegerType
 
-array_size = 1952
+array_size = 640
 def hash1(word):
-  word_sum = sum(map(lambda a: ord(a), word))
-  return word_sum % array_size
+  return mmh3.hash(word)
 
 def hash2(word):
   word_sum = 1 + sum(map(lambda a: ord(a) + 23, word)) * 101
@@ -31,7 +31,7 @@ def eval_sentence(sentence, filter):
   total = 0
   
   for word in sentence.split(' '):
-    indices = get_indices(word)
+    indices = [hash1(word) % array_size]
     total += sum([int(filter[i]) for i in indices])
 
   return total
