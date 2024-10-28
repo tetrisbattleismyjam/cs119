@@ -28,6 +28,7 @@ def leading_ones(hash):
     print('counting leading 1 of %s' % bin_string[:10])
     count = 0
     for bit in bin_string:
+        print(bit)
         if bit == 1:
             count += 1
         else: 
