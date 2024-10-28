@@ -74,12 +74,12 @@ if __name__ == "__main__":
     filtered = lines_eval.select(col('sentence'), col('eval')).filter(col('eval') < 1)
 
     # Explode into words because this makes it easier to read
-    word_count = filtered.select(explode(split(filtered.sentence, ' ')).alias('word'))\
-                          .groupBy(col('word'))\
-                          .count()
+    # word_count = filtered.select(explode(split(filtered.sentence, ' ')).alias('word'))\
+    #                      .groupBy(col('word'))\
+    #                      .count()
                                                                               
     # Transform into columns sentence, bloom count. Output only newly edited rowss
-    query = word_count\
+    query = filtered\
         .writeStream\
         .outputMode('update')\
         .format('console')\
