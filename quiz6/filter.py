@@ -32,7 +32,7 @@ def eval_sentence(sentence, filter):
   
   for word in sentence:
     indices = get_indices(word)
-    total += sum([filter[i] for i in indices])
+    total += sum([int(filter[i]) for i in indices])
 
   return total
       
