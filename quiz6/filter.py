@@ -57,7 +57,7 @@ if __name__ == "__main__":
     df = spark.read.text(bloom_path)
     rdd_ = df.select(decode(unbase64('value'),'UTF-8').alias('value')).rdd
     bloom_filter = rdd_.map(lambda a: a['value']).flatMap(lambda a: [char for char in a]).collect()
-    bloomUDF = udf(lambda a: eval_sentence(a), IntegerType())
+    bloomUDF = udf(lambda a: eval_sentence(a, bloom_filter), IntegerType())
   
     # create DataFrame for the input lines coming in to the given host and port
     lines = spark\
