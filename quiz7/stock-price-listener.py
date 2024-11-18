@@ -62,5 +62,5 @@ if __name__ == "__main__":
     
     time.sleep(5)
     while True:
-        avg = spark.sql('select * from aapl_10').collect()
+        avg = spark.sql('select * from aapl_10').collect()[1]['Price']
         print(avg)
