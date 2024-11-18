@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys, time
-import pyspark
 import pandas as pd
 
 if __name__ == "__main__":
