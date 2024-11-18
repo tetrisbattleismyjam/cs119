@@ -8,7 +8,7 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
-def main():
+if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: stock-price-listener.py <hostname> <port>")
 
@@ -42,6 +42,3 @@ def main():
             .start()
     
     query.awaitTermination()
-    
-if __name__ == "__main__":
-    main()
