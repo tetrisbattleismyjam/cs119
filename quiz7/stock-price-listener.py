@@ -36,28 +36,23 @@ if __name__ == "__main__":
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
+    # aaplPrice and msftPrice
     aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
     msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
 
     aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg'})
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))
+    
     aapl_40 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg'})
-
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
+    
     msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg'})
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))
+    
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg'})
-    
-    query = aapl_10\
-            .writeStream\
-            .format("console")\
-            .outputMode('complete')\
-            .option('truncate', False)\
-            .start()
-    
-    query.awaitTermination()
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
+
+    time.sleep(5)
+    while True:
+        aapl_10_avg = aapl_10.agg({'price': 'avg', 'date': 'max'}).collect()[0][0]
+        print(aapl_10_avg)
