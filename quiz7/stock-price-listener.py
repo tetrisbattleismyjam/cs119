@@ -10,6 +10,20 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
+def get_date_avg(df):
+    q = df.writeStream\
+            .queryName('df_q')\
+            .outputMode("complete")\
+            .format("memory") \
+            .start()
+
+    row = spark.sql('select * from df_q').collect()[0]
+    avg = row['avg(price)']
+    date = row['max(date)']
+
+    q.stop()
+    return (date, avg)
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: stock-price-listener.py <hostname> <port>")
@@ -57,26 +71,13 @@ if __name__ == "__main__":
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
                             .agg({'price': 'avg', 'date': 'max'})
 
-    aapl_40.writeStream\
-        .queryName('aapl_40')\
-        .outputMode("complete")\
-        .format("memory") \
-        .start()
-    
-    msft_40.writeStream\
-        .queryName('msft_40')\
-        .outputMode("complete")\
-        .format("memory") \
-        .start()
-    
     time.sleep(5)
     while True:
-        aapl_rows_40 = spark.sql('select * from aapl_40').collect()
-        appl_avg_40 = aapl_rows_40[0]['avg(price)']
-
-        msft_rows_40 = spark.sql('select * from msft_40').collect()
-        msft_avg_40 = msft_rows_40[0]['avg(price)']
-
-        print(appl_avg_40, msft_avg_40)
+        aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
+        aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
+        
+        msft_10_date, msft_10_avg = get_date_avg(msft_10)
+        msft_40_date, msft_40_avg = get_date_avg(msft_40)
+        print(aapl_10_date, aapl_10_avg, aapl_40_avg)
         
         time.sleep(3)
