@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import pyspark
+import datetime
 
 from pyspark import SparkFiles
 from pyspark.conf import SparkConf
@@ -34,8 +35,13 @@ if __name__ == "__main__":
     lines_split = lines.select(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1).alias('date')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('AAPL')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('MSFT'))
-                               
-    query = lines_split\
+
+    aapl_stream = lines_split.select(col('date'), col('AAPL').alias('price'))
+    msft_stream = lines_split.select(col('date'), col('MSFT').alias('price'))
+
+    aapl_10 = aapl_stream.filter(col('date') > sql_f.date_sub(sql_f.max(col('date')), 10))
+    
+    query = aapl_10\
             .writeStream\
             .format("console")\
             .option('truncate', False)\
