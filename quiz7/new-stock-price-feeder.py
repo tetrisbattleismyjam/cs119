@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# !pip install pandas
 import sys, time
 import pandas as pd
 
