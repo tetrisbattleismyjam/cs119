@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     aapl_10.writeStream\
         .queryName('aapl_10')\
-        .outputMode("update")\
+        .outputMode("complete")\
         .format("memory") \
         .start()
     
