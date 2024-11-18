@@ -22,6 +22,7 @@ def main():
 
     spark.sparkContext.setLogLevel('WARN')
 
+    print(host, port)
     # create streaming dataframe for incoming stock data.
     lines = spark \
             .readStream \
