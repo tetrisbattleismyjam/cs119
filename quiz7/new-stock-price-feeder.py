@@ -4,7 +4,7 @@ import sys, time
 import pandas as pd
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 2:
         print("Usage: new-stock-price-feeder.py <stock data file path>", file=sys.stderr)
         sys.exit(-1)
 
@@ -14,11 +14,11 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     combined = pd.read_csv(file_path)
 
-    aapl_df = combined[combined['Symbol'] == "AAPL"].set_index('datatime')
+    aapl_df = combined[combined['Symbol'] == "AAPL"].set_index('datetime')
     msft_df = combined[combined['Symbol'] == "MSFT"].set_index('datetime')
 
     aapl_df.sort_index(axis=0, inplace=True)
-    msft_df.sort_values(axis=0, inplace=True)
+    msft_df.sort_index(axis=0, inplace=True)
 
     max_rows = msft_df.shape[0]
 
