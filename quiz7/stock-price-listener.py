@@ -31,9 +31,9 @@ if __name__ == "__main__":
             .option('port', port)\
             .load()
     
-    lines_split = lines.select(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 0).alias('date')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1).alias('AAPL')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
+    lines_split = lines.select(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1).alias('date')\
+                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('AAPL')\
+                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('MSFT'))
                                
     query = lines_split\
             .writeStream\
