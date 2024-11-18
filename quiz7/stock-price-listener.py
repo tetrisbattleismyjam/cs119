@@ -17,9 +17,10 @@ def get_date_avg(df):
             .format("memory") \
             .start()
 
-    row = spark.sql('select * from df_q').collect()[0]
-    avg = row['avg(price)']
-    date = row['max(date)']
+    print(spark.sql('select * from df_q').collect())
+    # row = spark.sql('select * from df_q').collect()[0]
+    # avg = row['avg(price)']
+    # date = row['max(date)']
 
     q.stop()
     return (date, avg)
