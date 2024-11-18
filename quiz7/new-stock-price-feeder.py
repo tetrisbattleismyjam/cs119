@@ -21,16 +21,17 @@ if __name__ == "__main__":
     msft_df.sort_index(axis=0, inplace=True)
 
     max_rows = msft_df.shape[0]
-
+    
     # Walk down MSFT stock dataframe. (This had more rows than AAPL stock data).
     # Print MSFT and AAPL stock data for datetimes that exist in both
+    time.sleep(20) # give time to set up the listener
     for i in range(max_rows):
         index = msft_df.iloc[i].name
         
         if index in aapl_df.index:
             msft_price = msft_df.loc[index]['open']
             aapl_price = aapl_df.loc[index]['open']
-
+            time.sleep(5)
             print('%19s\t%.4f\t%.4f' % (index, msft_price, aapl_price))
 
 
