@@ -46,7 +46,8 @@ if __name__ == "__main__":
                             .agg({'price': 'avg', 'date': 'max'})
     
     aapl_40 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
+                            .agg({'price': 'avg', 'date': 'max'})
     
     msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))
@@ -59,8 +60,18 @@ if __name__ == "__main__":
         .outputMode("complete")\
         .format("memory") \
         .start()
+
+    aapl_40.writeStream\
+        .queryName('aapl_40')\
+        .outputMode("complete")\
+        .format("memory") \
+        .start()
     
     time.sleep(5)
     while True:
-        avg = spark.sql('select * from aapl_10').collect()[1]['avg(price)']
-        print(avg)
+        row = spark.sql('select * from aapl_10').collect()\
+        avg_date = row[1]['max(date)']
+        a_avg_10 = row[1]['avg(price)']
+        a_avg_40 = spark.sql('select * from aapl_40').collect()[1]['avg(price)']
+        
+        print(avg_date, a_avg_10, a_avg_40)
