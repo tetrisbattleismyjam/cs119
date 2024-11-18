@@ -55,14 +55,14 @@ if __name__ == "__main__":
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
 
-    aapl_10.writeStream\
-        .queryName('aapl_10')\
+    aapl_40.writeStream\
+        .queryName('aapl_40')\
         .outputMode("complete")\
         .format("memory") \
         .start()
-
-    aapl_40.writeStream\
-        .queryName('aapl_40')\
+    
+    aapl_10.writeStream\
+        .queryName('aapl_10')\
         .outputMode("complete")\
         .format("memory") \
         .start()
