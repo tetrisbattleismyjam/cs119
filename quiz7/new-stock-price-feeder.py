@@ -8,7 +8,7 @@ if __name__ == "__main__":
         print("Usage: new-stock-price-feeder.py <stock data file path>", file=sys.stderr)
         sys.exit(-1)
 
-    print ('Argv', sys.argv)
+    print ('Argv', sys.argv, flush=True)
 
     # set up dataframe of stock data    
     file_path = sys.argv[1]
