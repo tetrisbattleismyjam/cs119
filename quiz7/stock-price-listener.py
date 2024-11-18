@@ -42,6 +42,7 @@ if __name__ == "__main__":
     aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
                             .groupBy(sql_f.col('date'))\
+                            .agg(sql_f.col('price'), 'avg')
     
     query = aapl_10\
             .writeStream\
