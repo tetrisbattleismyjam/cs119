@@ -57,13 +57,13 @@ if __name__ == "__main__":
 
     aapl_10.writeStream\
         .queryName('aapl_10')\
-        .outputMode("update")\
+        .outputMode("complete")\
         .format("memory") \
         .start()
 
     aapl_40.writeStream\
         .queryName('aapl_40')\
-        .outputMode("update")\
+        .outputMode("complete")\
         .format("memory") \
         .start()
     
@@ -75,3 +75,4 @@ if __name__ == "__main__":
         a_avg_40 = spark.sql('select * from aapl_40').collect()[0]['avg(price)']
         
         print(avg_date, a_avg_10, a_avg_40)
+        time.sleep(3)
