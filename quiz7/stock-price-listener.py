@@ -39,7 +39,8 @@ if __name__ == "__main__":
     aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
     msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
 
-    aapl_10 = aapl_stream.filter(sql_f.col('date') > sql_f.date_sub(sql_f.max(sql_f.col('date')), 10))
+    aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))
     
     query = aapl_10\
             .writeStream\
