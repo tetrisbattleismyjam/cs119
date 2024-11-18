@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # !pip install pandas
 import sys, time
-import pyspark.pandas as pd
+import pandas as pd
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
