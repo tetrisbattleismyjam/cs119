@@ -69,10 +69,13 @@ if __name__ == "__main__":
     
     time.sleep(5)
     while True:
-        rows = spark.sql('select * from aapl_10').collect()
-        avg_date = rows[0]['max(date)']
-        a_avg_10 = rows[0]['avg(price)']
-        a_avg_40 = spark.sql('select * from aapl_40').collect()[0]['avg(price)']
+        rows_10 = spark.sql('select * from aapl_10').collect()
+        rows_40 = spark.sql('select * from aapl_40').collect()
         
+        avg_date = rows_10[0]['max(date)']
+        a_avg_10 = rows_10[0]['avg(price)']
+        a_avg_40 = rows_40[0]['avg(price)']
+
+        print(rows_40)
         print(avg_date, a_avg_10, a_avg_40)
         time.sleep(3)
