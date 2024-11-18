@@ -50,10 +50,12 @@ if __name__ == "__main__":
                             .agg({'price': 'avg', 'date': 'max'})
     
     msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
+                            .agg({'price': 'avg', 'date': 'max'})
     
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
+                            .agg({'price': 'avg', 'date': 'max'})
 
     aapl_40.writeStream\
         .queryName('aapl_40')\
