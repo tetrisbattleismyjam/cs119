@@ -18,9 +18,9 @@ def get_date_avg(df):
             .start()
 
     print(spark.sql('select * from df_q').collect())
-    # row = spark.sql('select * from df_q').collect()[0]
-    # avg = row['avg(price)']
-    # date = row['max(date)']
+    row = spark.sql('select * from df_q').collect()[0]
+    avg = row['avg(price)']
+    date = row['max(date)']
 
     q.stop()
     return (date, avg)
@@ -72,7 +72,7 @@ if __name__ == "__main__":
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
                             .agg({'price': 'avg', 'date': 'max'})
 
-    time.sleep(5)
+    time.sleep(10)
     while True:
         aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
         aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
