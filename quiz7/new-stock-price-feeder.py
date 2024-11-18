@@ -32,6 +32,6 @@ if __name__ == "__main__":
             msft_price = msft_df.loc[index]['open']
             aapl_price = aapl_df.loc[index]['open']
             time.sleep(0.5)
-            print('%19s\t%.4f\t%.4f' % (index, msft_price, aapl_price))
+            print('%19s\t%.4f\t%.4f' % (index, msft_price, aapl_price), flus=True)
 
 
