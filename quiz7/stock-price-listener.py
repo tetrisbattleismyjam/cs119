@@ -54,13 +54,12 @@ if __name__ == "__main__":
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))
 
+    aapl_10.writeStream\
+        .queryName('aapl_10')\
+        .outputMode("complete")\
+        .format("memory") \
+        .start()
+    
     time.sleep(5)
     while True:
-        aapl_10.writeStream\
-                .queryName('aapl_10')\
-                .outputMode("complete")\
-                .format("memory") \
-                .start()
-        
-        avg = spark.sql('select * from aapl_10').collect()[0][0]
-        print(avg)
+        spark.sql('select * from aapl_10').show()
