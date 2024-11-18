@@ -31,11 +31,11 @@ def main():
             .option('port', port)\
             .load()
     
-    lines_split = lines.select(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 0).alias('date')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1).alias('AAPL')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
+    #lines_split = lines.select(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 0).alias('date')\
+    #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1).alias('AAPL')\
+    #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
                                
-    query = lines_split\
+    query = lines\
             .writeStream\
             .format("console")\
             .option('truncate', False)\
