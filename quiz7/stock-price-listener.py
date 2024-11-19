@@ -9,7 +9,6 @@ from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
-import pyspark.sql import Catalog as sql_c
 
 # def get_date_avg(df):
     
@@ -23,25 +22,7 @@ import pyspark.sql import Catalog as sql_c
     #return (date, avg)
     # return (1, 1)
 
-def writeToTable(df_batch, batch_id):
-    aapl_tbl = "aaplPrices"
-    msft_tbl = "msftPrices"
-
-    df_batch.persist()
-    # write to apple
-    if sql_c.tableExists(aapl_tbl):
-        df_batch.select(col('date'), col('AAPL')).writeTo(aapl_tbl).append()
-    else:
-        df_batch.select(col('date'), col('AAPL')).writeTo(aapl_tbl).create()
-
-    # write to microsoft
-    if sql_c.tableExists(msft_tbl):
-        df_batch.select(col('date'), col('MSFT')).writeTo(msft_tbl).append()
-    else:
-        df_batch.select(col('date'), col('MSFT')).writeTo(msft_tbl).create()
-
-    print(spark.sql('SELECT * FROM aaplPrices').collect())
-    df_batch.unpersist()
+                                                                                                                                                                                          
     
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -70,10 +51,14 @@ if __name__ == "__main__":
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
-    lines_split.writeStream\
-                .forEachBatch(writeToTable)\
-                .outputMode("Append")\
+    day_average = lines_split.groupby('date').avg()
+    query = day_average.writeStream\
+                .outputMode('complete')\
+                .format('console')\
                 .start()
+
+    query.awaitTermination()
+    
     # aaplPrice and msftPrice
     # aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
     # msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
@@ -100,13 +85,13 @@ if __name__ == "__main__":
 
 
     
-    time.sleep(10)
-    while True:
-        aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
-        aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
-        msft_10_date, msft_10_avg = get_date_avg(msft_10)
-        msft_40_date, msft_40_avg = get_date_avg(msft_40)
+    # time.sleep(10)
+    # while True:
+    #    aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
+    #    aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
+    #    msft_10_date, msft_10_avg = get_date_avg(msft_10)
+    #    msft_40_date, msft_40_avg = get_date_avg(msft_40)
         
         # print(aapl_10_date, aapl_10_avg, aapl_40_avg)
         
-        time.sleep(3)
+    #    time.sleep(3)
