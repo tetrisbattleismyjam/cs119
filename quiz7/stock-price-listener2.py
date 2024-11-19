@@ -84,8 +84,10 @@ if __name__ == "__main__":
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))
     
-    aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'}).sort('window')
-    aapl40Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'}).sort('window')
+    aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg', 'date': 'max'}).sort('window')
+    aapl40Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg', 'date': 'max'}).sort('window')
+    msft10Day = msftPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg', 'date': 'max'}).sort('window')
+    msft40Day = msftPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg', 'date': 'max'}).sort('window')
     
     q = aapl10Day.writeStream\
                 .queryName('aapl10Day')\
@@ -93,13 +95,75 @@ if __name__ == "__main__":
                 .option('truncate', False)\
                 .format('memory')\
                 .start()
+    
+    aapl40Day.writeStream\
+                .queryName('aapl40Day')\
+                .outputMode('Complete')\
+                .option('truncate', False)\
+                .format('memory')\
+                .start()
 
+    msft10Day.writeStream\
+                .queryName('msft10Day')\
+                .outputMode('Complete')\
+                .option('truncate', False)\
+                .format('memory')\
+                .start()
+
+    msft40Day.writeStream\
+                .queryName('msft40Day')\
+                .outputMode('Complete')\
+                .option('truncate', False)\
+                .format('memory')\
+                .start()
+    
+    aapl10dayAvg = 0
+    aapl40dayAvg = 0
+    msft10dayAvg = 0
+    msft40dayAvg = 0
+    
+    msftBull = False
+    aaplBull = False
+
+    recommendation = []
     while q.isActive:
             time.sleep(10)
             rows = spark.sql('select * from aapl10day').tail(1)
             if len(rows) > 0:
                 aapl10dayAvg = rows[0]['avg(price)']
-                print(aapl10dayAvg)
+                aaplDate = rows[0]['max(date)']
+
+            rows = spark.sql('select * from aapl40day').tail(1)
+            if len(rows) > 0:
+                aapl40dayAvg = rows[0]['avg(price)']
+
+            rows = spark.sql('select * from msft10day').tail(1)
+            if len(rows) > 0:
+                msft10dayAvg = rows[0]['avg(price)']
+                msftDate = rows[0]['max(date)']
+                
+            rows = spark.sql('select * from msft40day').tail(1)
+            if len(rows) > 0:
+                msft40dayAvg = rows[0]['avg(price)']
+
+            if msft10dayAvg and msft40dayAvg and msft10dayAvg > msft40dayAvg and not msftBull:
+                recommendations.append((msftDate, 'buy', 'MSFT'))
+                msftBull = True
+
+            if msft10dayAvg and msft40dayAvg and msft10dayAvg < msft40dayAvg and msftBull:
+                recommendations.append((msftDate, 'sell', 'MSFT'))
+                msftBull = False
+                
+            if aapl10dayAvg and aapl40dayAvg and aapl10dayAvg > aapl40dayAvg and not aaplBull:
+                recommendations.append((aaplDate, 'buy', 'AAPL'))
+                aaplBull = True
+
+            if aapl10dayAvg and aapl40dayAvg and aapl10dayAvg < aapl40dayAvg and aaplBull:
+                recommendations.append((aaplDate, 'sell', 'AAPL'))
+                aaplBull = False
+    
+            if len(recommendation) > 10:
+                print(recommendation)
             
     q.awaitTermination()
 
