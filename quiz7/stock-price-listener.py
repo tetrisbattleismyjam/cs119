@@ -11,20 +11,21 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
 def get_date_avg(df):
-    q = df.writeStream\
-            .queryName('df_q')\
-            .outputMode("complete")\
-            .format("memory") \
-            .start()
+    #q = df.writeStream\
+    #        .queryName('df_q')\
+    #        .outputMode("complete")\
+    #        .format("memory") \
+    #        .start()
 
     print(df)
-    print(spark.sql('select * from df_q').collect())
-    row = spark.sql('select * from df_q').collect()[0]
-    avg = row['avg(price)']
-    date = row['max(date)']
+    #print(spark.sql('select * from df_q').collect())
+    #row = spark.sql('select * from df_q').collect()[0]
+    #avg = row['avg(price)']
+    #date = row['max(date)']
 
-    q.stop()
-    return (date, avg)
+    #q.stop()
+    #return (date, avg)
+    return (1, 1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
