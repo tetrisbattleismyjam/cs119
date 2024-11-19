@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     while query.isActive:
         time.sleep(3)
-        spark.sql('SELECT * FROM day_avg').show()
+        spark.sql('select * from day_avg').show()
         
     query.awaitTermination()
     # aaplPrice and msftPrice
