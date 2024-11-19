@@ -72,8 +72,8 @@ if __name__ == "__main__":
             .option('host', host)\
             .option('port', port)\
             .load()\
-            .select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('price'))
+            .select(sql_f.substring(sql_f.element_at(sql_f.split(msftPrices.value, '[\t]'), 1), 1, 10).alias('date')\
+                               ,sql_f.element_at(sql_f.split(msftPrices.value, '[\t]'), 2).alias('price'))
 
     aaplPrices = spark\
               .readStream \
@@ -81,8 +81,8 @@ if __name__ == "__main__":
               .option('host', host)\
               .option('port', port)\
               .load()\
-              .select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
-                                 ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('price'))
+              .select(sql_f.substring(sql_f.element_at(sql_f.split(aaplPrices.value, '[\t]'), 1), 1, 10).alias('date')\
+                                 ,sql_f.element_at(sql_f.split(aaplPrices.value, '[\t]'), 3).alias('price'))
 
     q = msftPrices.writeStream\
               .outputMode('Append')\
