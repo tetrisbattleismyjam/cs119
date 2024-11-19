@@ -47,7 +47,8 @@ def process_batch(df_batch, batch_id):
                         .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),40))\
                         .filter(sql_f.col('symbol') == 'AAPL')\
                         .agg({'avg(price)': 'avg'}).collect[0]['avg(avg(price))']
-
+        print(msft_avg_10, msft_avg_40, aapl_avg_10, aapl_avg_40)
+        
         df_batch.unpersist()
 if __name__ == "__main__":
     if len(sys.argv) != 3:
