@@ -9,20 +9,39 @@ from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
+import pyspark.sql.Catalog as sql_c
 
-def get_date_avg(df):
-    df.createOrReplaceTempView("windowed_average")
-
+# def get_date_avg(df):
+    
 #   print(df)
-    print(spark.sql('select * from windowed_average').collect())
+    # print(spark.sql('select * from windowed_average').collect())
     #row = spark.sql('select * from df_q').collect()[0]
     #avg = row['avg(price)']
     #date = row['max(date)']
 
     # q.stop()
     #return (date, avg)
-    return (1, 1)
+    # return (1, 1)
 
+def writeToTable(df_batch, batch_id):
+    aapl_tbl = "aaplPrices"
+    msft_tbl = "msftPrices"
+
+    df_batch.persist()
+    # write to apple
+    if sql_c.tableExists(aapl_tbl):
+        df_batch.writeTo(aapl_tbl).append()
+    else:
+        df_batch.writeTo(aapl_tbl).create()
+
+    # write to microsoft
+    if sql_c.tableExists(msft_tbl):
+        df_batch.writeTo(msft_tbl).append()
+    else:
+        df_batch.writeTo(msft_tbl).create()
+
+    df_batch.unpersist()
+    
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: stock-price-listener.py <hostname> <port>")
@@ -50,29 +69,33 @@ if __name__ == "__main__":
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
+    lines_split.writeStream\
+                .forEachBatch(writeToTable)\
+                .outputMode("Append")\
+                .start()
     # aaplPrice and msftPrice
-    aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
-    msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
+    # aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
+    # msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
 
-    aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg', 'date': 'max'})\
-                            .withColumnRenamed('avg(price)', 'aapl_10')
+    # aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
+                            # .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
+                            # .agg({'price': 'avg', 'date': 'max'})\
+                            # .withColumnRenamed('avg(price)', 'aapl_10')
     
-    aapl_40 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg', 'date': 'max'})\
-                            .withColumnRenamed('avg(price)', 'aapl_40')
+    # aapl_40 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
+                            # .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
+                            # .agg({'price': 'avg', 'date': 'max'})\
+                            # .withColumnRenamed('avg(price)', 'aapl_40')
     
-    msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg', 'date': 'max'})\
-                            .withColumnRenamed('avg(price)', 'msft_10')
+    # msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
+                            # .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
+                            # .agg({'price': 'avg', 'date': 'max'})\
+                            # .withColumnRenamed('avg(price)', 'msft_10')
     
-    msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg', 'date': 'max'})\
-                            .withColumnRenamed('avg(price)', 'msft_40')
+    # msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
+                            # .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
+                            # .agg({'price': 'avg', 'date': 'max'})\
+                            # .withColumnRenamed('avg(price)', 'msft_40')
 
 
     
