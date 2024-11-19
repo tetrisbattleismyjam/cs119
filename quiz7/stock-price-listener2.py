@@ -72,27 +72,39 @@ if __name__ == "__main__":
             .option('host', host)\
             .option('port', port)\
             .load()\
-            .select(sql_f.substring(sql_f.element_at(sql_f.split('value', '[\t]'), 1), 1, 10).alias('date')\
-                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).alias('price'))
+            .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
+                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).alias('price'))\
+            .withWatermark('date', '41 days')
 
     aaplPrices = spark\
-              .readStream \
-              .format('socket')\
-              .option('host', host)\
-              .option('port', port)\
-              .load()\
-              .select(sql_f.substring(sql_f.element_at(sql_f.split('value', '[\t]'), 1), 1, 10).alias('date')\
-                                 ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).alias('price'))
+                  .readStream \
+                  .format('socket')\
+                  .option('host', host)\
+                  .option('port', port)\
+                  .load()\
+                  .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
+                                     ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).alias('price'))\
+                  .withWatermark('date', '41 days')
 
-    q = msftPrices.writeStream\
-              .outputMode('Append')\
+    aapl10Day = aaplPrices.withColumn('maxDate', sql_f.max(sql_f.col('date')))\
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('maxDate'), 10))\
+                            .groupBy(sql_f.col('maxDate'))\
+                            .agg({'price': 'avg'})\
+                            .withColumnRenamed('avg(price)', 'aapl10Day')
+    
+    aapl40Day = aaplPrices.withColumn('maxDate', sql_f.max(sql_f.col('date')))\
+                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('maxDate'), 40))\
+                            .groupBy(sql_f.col('maxDate'))\
+                            .agg({'price': 'avg'})\
+                            .withColumnRenamed('avg(price)', 'aapl10Day')
+
+    aaplRolling = aapl10Day.join(aapl40Day, 'maxDate')
+    
+    q = aaplRolling.writeStream\
+              .outputMode('Complete')\
               .format('console')\
               .start()
-   
-    q2 = aaplPrices.writeStream\
-            .outputMode('Append')\
-            .format('console')\
-            .start()
+
 
     q.awaitTermination()
 
