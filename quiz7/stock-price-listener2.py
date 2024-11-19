@@ -89,7 +89,7 @@ if __name__ == "__main__":
     aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '2 days'), 'price').agg({'price': 'avg'})
     
     q = aapl10Day.writeStream\
-              .outputMode('Append')\
+              .outputMode('Complete')\
               .format('console')\
               .start()
 
