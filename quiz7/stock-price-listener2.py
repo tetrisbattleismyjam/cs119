@@ -86,22 +86,10 @@ if __name__ == "__main__":
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).alias('price'))\
                   .withWatermark('date', '41 days')
 
-    aapl10Day = aaplPrices.withColumn('maxDate', sql_f.max(sql_f.col('date')))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('maxDate'), 10))\
-                            .groupBy(sql_f.col('maxDate'))\
-                            .agg({'price': 'avg'})\
-                            .withColumnRenamed('avg(price)', 'aapl10Day')
+    aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '15 minutes')).agg({'price':'avg'})
     
-    aapl40Day = aaplPrices.withColumn('maxDate', sql_f.max(sql_f.col('date')))\
-                            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('maxDate'), 40))\
-                            .groupBy(sql_f.col('maxDate'))\
-                            .agg({'price': 'avg'})\
-                            .withColumnRenamed('avg(price)', 'aapl10Day')
-
-    aaplRolling = aapl10Day.join(aapl40Day, 'maxDate')
-    
-    q = aaplRolling.writeStream\
-              .outputMode('Complete')\
+    q = aapl10Day.writeStream\
+              .outputMode('Append')\
               .format('console')\
               .start()
 
