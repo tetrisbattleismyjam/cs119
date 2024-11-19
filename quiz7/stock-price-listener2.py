@@ -73,7 +73,7 @@ if __name__ == "__main__":
             .option('port', port)\
             .load()\
             .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
-                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).alias('price'))\
+                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).cast('long').alias('price'))\
             .withWatermark('date', '41 days')
 
     aaplPrices = spark\
@@ -83,7 +83,7 @@ if __name__ == "__main__":
                   .option('port', port)\
                   .load()\
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
-                                     ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).alias('price'))\
+                                     ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('long').alias('price'))\
                   .withWatermark('date', '41 days')
 
     # aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '15 minutes')).agg({'price':'avg'})
