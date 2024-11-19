@@ -85,7 +85,7 @@ if __name__ == "__main__":
     
     query = lines_split.writeStream\
                 .queryName('day_avg')\
-                .outputMode('Complete')\
+                .outputMode('Append')\
                 .format('console')\
                 .foreachBatch(process_batch)\
                 .start()
