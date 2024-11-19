@@ -48,7 +48,7 @@ if __name__ == "__main__":
             .load()
 
     lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('price')\
+                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).cast('float').alias('price')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('symbol'))
     
     # lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
