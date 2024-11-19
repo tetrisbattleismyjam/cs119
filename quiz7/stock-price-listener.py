@@ -30,15 +30,15 @@ def writeToTable(df_batch, batch_id):
     df_batch.persist()
     # write to apple
     if sql_c.tableExists(aapl_tbl):
-        df_batch.writeTo(aapl_tbl).append()
+        df_batch.select(col('date'), col('AAPL')).writeTo(aapl_tbl).append()
     else:
-        df_batch.writeTo(aapl_tbl).create()
+        df_batch.select(col('date'), col('AAPL')).writeTo(aapl_tbl).create()
 
     # write to microsoft
     if sql_c.tableExists(msft_tbl):
-        df_batch.writeTo(msft_tbl).append()
+        df_batch.select(col('date'), col('MSFT')).writeTo(msft_tbl).append()
     else:
-        df_batch.writeTo(msft_tbl).create()
+        df_batch.select(col('date'), col('MSFT')).writeTo(msft_tbl).create()
 
     print(spark.sql('SELECT * FROM aaplPrices').collect())
     df_batch.unpersist()
