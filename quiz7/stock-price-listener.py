@@ -15,7 +15,7 @@ def process_batch(df_batch, batch_id):
     df_batch.persist()
     df_batch.withColumn('max_date', sql_f.col('date'))\
             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
-            .filter(sql_f.col('symbol') == 'msft')\
+            .filter(sql_f.col('symbol') == 'MSFT')\
             .agg({'avg(price)': 'avg'}).show()
     
     df_batch.unpersist()
