@@ -76,7 +76,7 @@ if __name__ == "__main__":
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
                             .agg({'price': 'avg', 'date': 'max'})\
-                            .withColumnRenated('avg(price)', 'msft_40')
+                            .withColumnRenamed('avg(price)', 'msft_40')
 
     combined = aapl_10.join(aapl_40,['max(date)'])
     q = combined.writeStream\
