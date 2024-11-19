@@ -10,22 +10,22 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
-#def get_date_avg(df):
-    #q = df.writeStream\
-    #        .queryName('df_q')\
-    #        .outputMode("complete")\
-    #        .format("memory") \
-    #        .start()
+def get_date_avg(df):
+    q = df.writeStream\
+            .queryName('df_q')\
+            .outputMode("complete")\
+            .format("memory") \
+            .start()
 
-#    print(df)
-    #print(spark.sql('select * from df_q').collect())
+#   print(df)
+    print(spark.sql('select * from df_q').collect())
     #row = spark.sql('select * from df_q').collect()[0]
     #avg = row['avg(price)']
     #date = row['max(date)']
 
     #q.stop()
     #return (date, avg)
-#    return (1, 1)
+    return (1, 1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -78,23 +78,16 @@ if __name__ == "__main__":
                             .agg({'price': 'avg', 'date': 'max'})\
                             .withColumnRenamed('avg(price)', 'msft_40')
 
-    combined = aapl_10.join(aapl_40,['max(date)'])
-    q = combined.writeStream\
-                .outputMode("Append")\
-                .format("console")\
-                .start()
+
     
-    q.awaitTermination()
-    
-    #time.sleep(10)
-    # while True:
+    time.sleep(10)
+    while True:
+        print(aapl_10)
+        aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
+        aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
+        msft_10_date, msft_10_avg = get_date_avg(msft_10)
+        msft_40_date, msft_40_avg = get_date_avg(msft_40)
         
-        #print(aapl_10)
-        #aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
-        #aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
+        # print(aapl_10_date, aapl_10_avg, aapl_40_avg)
         
-        #msft_10_date, msft_10_avg = get_date_avg(msft_10)
-        #msft_40_date, msft_40_avg = get_date_avg(msft_40)
-        #print(aapl_10_date, aapl_10_avg, aapl_40_avg)
-        
-        #time.sleep(3)
+        time.sleep(3)
