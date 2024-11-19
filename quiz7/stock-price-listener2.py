@@ -94,5 +94,5 @@ if __name__ == "__main__":
             .format('console')\
             .start()
 
-    q1.awaitTermination()
+    q.awaitTermination()
 
