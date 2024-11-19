@@ -94,10 +94,11 @@ if __name__ == "__main__":
                 .format('memory')\
                 .start()
 
-    time.sleep(5)
     while q.isActive:
-            aapl10dayAvg = spark.sql('select * from aapl10day').tail(1)[1]['avg(price)']
-            print(aapl10dayAvg)
+            rows = spark.sqsl('select * from aapl10day').tail(1)
+            if len(row) > 0:
+                aapl10dayAvg = rows[1]['avg(price)']
+                print(aapl10dayAvg)
             
     q.awaitTermination()
 
