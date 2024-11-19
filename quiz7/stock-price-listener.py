@@ -19,6 +19,7 @@ def process_batch(df_batch, batch_id):
             .agg({'avg(price)': 'avg'}).show()
     
     df_batch.unpersist()
+    
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: stock-price-listener.py <hostname> <port>")
@@ -56,6 +57,7 @@ if __name__ == "__main__":
                 .queryName('day_avg')\
                 .outputMode('Complete')\
                 .format('memory')\
+                .forEachBatch(process_batch)\
                 .start()
         
     query.awaitTermination()
