@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 .start()
 
     while q.isActive:
-            rows = spark.sqsl('select * from aapl10day').tail(1)
+            rows = spark.sql('select * from aapl10day').tail(1)
             if len(row) > 0:
                 aapl10dayAvg = rows[1]['avg(price)']
                 print(aapl10dayAvg)
