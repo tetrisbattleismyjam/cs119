@@ -10,14 +10,14 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
-def get_date_avg(df):
+#def get_date_avg(df):
     #q = df.writeStream\
     #        .queryName('df_q')\
     #        .outputMode("complete")\
     #        .format("memory") \
     #        .start()
 
-    print(df)
+#    print(df)
     #print(spark.sql('select * from df_q').collect())
     #row = spark.sql('select * from df_q').collect()[0]
     #avg = row['avg(price)']
@@ -25,7 +25,7 @@ def get_date_avg(df):
 
     #q.stop()
     #return (date, avg)
-    return (1, 1)
+#    return (1, 1)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -60,28 +60,41 @@ if __name__ == "__main__":
 
     aapl_10 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg', 'date': 'max'})
+                            .agg({'price': 'avg', 'date': 'max'})\
+                            .withColumnRenamed('avg(price)', 'aapl_10')
     
     aapl_40 = aapl_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg', 'date': 'max'})
+                            .agg({'price': 'avg', 'date': 'max'})\
+                            .withColumnRenamed('avg(price)', 'aapl_40')
     
     msft_10 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 10))\
-                            .agg({'price': 'avg', 'date': 'max'})
+                            .agg({'price': 'avg', 'date': 'max'})\
+                            .withColumnRenamed('avg(price)', 'msft_10')
     
     msft_40 = msft_stream.withColumn('max_date', sql_f.col('date'))\
                             .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'), 40))\
-                            .agg({'price': 'avg', 'date': 'max'})
+                            .agg({'price': 'avg', 'date': 'max'})\
+                            .withColumnRenated('avg(price)', 'msft_40')
 
-    time.sleep(10)
-    while True:
-        print(aapl_10)
-        aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
-        aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
+    combined = aapl_10.join(aapl_40,['max(date)'])
+    q = combined.writeStream\
+                .outputMode("Update")\
+                .format("console")\
+                .start()
+    
+    q.awaitTermination()
+    
+    #time.sleep(10)
+    # while True:
         
-        msft_10_date, msft_10_avg = get_date_avg(msft_10)
-        msft_40_date, msft_40_avg = get_date_avg(msft_40)
-        print(aapl_10_date, aapl_10_avg, aapl_40_avg)
+        #print(aapl_10)
+        #aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
+        #aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
         
-        time.sleep(3)
+        #msft_10_date, msft_10_avg = get_date_avg(msft_10)
+        #msft_40_date, msft_40_avg = get_date_avg(msft_40)
+        #print(aapl_10_date, aapl_10_avg, aapl_40_avg)
+        
+        #time.sleep(3)
