@@ -73,8 +73,7 @@ if __name__ == "__main__":
             .option('port', port)\
             .load()\
             .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
-                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).cast('float').alias('price'))\
-            .withWatermark('date', '41 days')
+                               ,sql_f.element_at(sql_f.split('value', '[\t]'), 2).cast('float').alias('price'))
 
     aaplPrices = spark\
                   .readStream \
@@ -83,10 +82,9 @@ if __name__ == "__main__":
                   .option('port', port)\
                   .load()\
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
-                                     ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))\
-                  .withWatermark('date', '41 days')
+                                     ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))
     
-    aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
+    aapl10Day = aaplPrices.withWatermark('date', '11 days').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
     
     q = aapl10Day.writeStream\
                 .outputMode('Append')\
