@@ -46,12 +46,16 @@ if __name__ == "__main__":
             .option('host', host)\
             .option('port', port)\
             .load()
-    
-    lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
-                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
-    day_average = lines_split.groupby('date').avg()
+    lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
+                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('price'))
+                               ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('symbol')\
+    
+    # lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).alias('date')\
+    #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
+    #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
+
+    day_average = lines_split.groupby(['date', 'symbol']).avg()
     query = day_average.writeStream\
                 .outputMode('complete')\
                 .format('console')\
