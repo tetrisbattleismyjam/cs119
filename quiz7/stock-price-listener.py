@@ -38,7 +38,7 @@ if __name__ == "__main__":
                                 .getOrCreate() 
 
     spark.sparkContext.setLogLevel('WARN')
-
+    
     print(host, port)
     # create streaming dataframe for incoming stock data. data coming is as (datetime, msft price, aapl price)
     lines = spark \
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             .option('port', port)\
             .load()
 
-    lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).cast('date').alias('date')\
+    lines_split = lines.select(sql_f.substring(sql_f.element_at(sql_f.split(lines.value, '[\t]'), 1), 1, 10).cast('timestamp').alias('date')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).cast('float').alias('price')\
                                ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('symbol'))
     
@@ -58,8 +58,8 @@ if __name__ == "__main__":
 
     day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg('price').sort('date')
     
-    window_10 = Window.partitionBy('symbol').orderBy('date').rangeBetween(-10, 0)
-    window_40 = Window.partitionBy('symbol').orderBy('date').rangeBetween(-40, 0)
+    window_10 = Window.partitionBy('symbol').orderBy(sql_f.col('date').cast('long')).rangeBetween(-(10 * 86400), 0)
+    window_40 = Window.partitionBy('symbol').orderBy(sql_f.col('date').cast('long')).rangeBetween(-(40 * 86400), 0)
     
     rolling_average = day_average.withColumn('10DayAverage', sql_f.avg('avg(price)').over(window_10))\
                                     .withColumn('40DayAverage', sql_f.avg('avg(price)').over(window_40))
