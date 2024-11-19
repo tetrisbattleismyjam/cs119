@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     time.sleep(10)
     while True:
-        print(aapl_10_date)
+        print(aapl_10)
         aapl_10_date, aapl_10_avg = get_date_avg(aapl_10)
         aapl_40_date, aapl_40_avg = get_date_avg(aapl_40)
         
