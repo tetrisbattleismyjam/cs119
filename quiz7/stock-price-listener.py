@@ -31,22 +31,22 @@ def process_batch(df_batch, batch_id):
         msft_avg_10 = df_batch.withColumn('max_date', sql_f.col('date'))\
                         .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
                         .filter(sql_f.col('symbol') == 'MSFT')\
-                        .agg({'avg(price)': 'avg'}).collect()[0]['avg(avg(price))']
+                        .agg({'price': 'avg'}).collect()[0]['avg(price)']
 
         msft_avg_40 = df_batch.withColumn('max_date', sql_f.col('date'))\
                         .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),40))\
                         .filter(sql_f.col('symbol') == 'MSFT')\
-                        .agg({'avg(price)': 'avg'}).collect()[0]['avg(avg(price))']
+                        .agg({'price': 'avg'}).collect()[0]['avg(price)']
 
         aapl_avg_10 = df_batch.withColumn('max_date', sql_f.col('date'))\
                         .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
                         .filter(sql_f.col('symbol') == 'AAPL')\
-                        .agg({'avg(price)': 'avg'}).collect()[0]['avg(avg(price))']
+                        .agg({'price': 'avg'}).collect()[0]['avg(price)']
         
         aapl_avg_40 = df_batch.withColumn('max_date', sql_f.col('date'))\
                         .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),40))\
                         .filter(sql_f.col('symbol') == 'AAPL')\
-                        .agg({'avg(price)': 'avg'}).collect()[0]['avg(avg(price))']
+                        .agg({'price': 'avg'}).collect()[0]['avg(price)']
         print(msft_avg_10, msft_avg_40, aapl_avg_10, aapl_avg_40)
         
         df_batch.unpersist()
@@ -81,9 +81,9 @@ if __name__ == "__main__":
     #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
     #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
-    day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg('price').sort('date')
+    # day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg('price').sort('date')
     
-    query = day_average.writeStream\
+    query = lines_split.writeStream\
                 .queryName('day_avg')\
                 .outputMode('Complete')\
                 .format('console')\
