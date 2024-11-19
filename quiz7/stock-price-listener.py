@@ -64,10 +64,12 @@ if __name__ == "__main__":
                 .format('memory')\
                 .start()
 
-    query.awaitTermination()
+    
 
     while True:
         spark.sql('SELECT * FROM day_avg WHERE symbol = "MSFT"').show()
+
+    query.awaitTermination()
     # aaplPrice and msftPrice
     # aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
     # msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
