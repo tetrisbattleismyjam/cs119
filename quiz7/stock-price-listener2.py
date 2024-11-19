@@ -4,7 +4,7 @@ import pyspark
 import datetime
 import time
 
-from pyspark.sql.window import Window
+from pyspark.sql import Window
 from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
@@ -85,8 +85,14 @@ if __name__ == "__main__":
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))\
                   .withWatermark('date', '41 days')
-
-    aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '15 minutes')).avg()
+    
+    seconds10 = 10 * 86400
+    seconds40 = 40 * 86400
+    
+    window10 = Window.orderBy(sql_f.col('date').cast('long')).rangeBetween(-seconds10, 0)
+    window40 = Window.orderBy(sql_f.col('date').cast('long')).rangeBetween(-seconds40, 0)
+    
+    aapl10Day = aaplPrices.withColumn('rolling10dayAverage', sql_f.avg('price').over(window10))
     
     q = aapl10Day.writeStream\
               .outputMode('Append')\
