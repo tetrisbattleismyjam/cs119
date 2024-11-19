@@ -14,7 +14,7 @@ def get_date_avg(df):
     df.createOrReplaceTempView("windowed_average")
 
 #   print(df)
-    print(spark.sql('select * from df_q').collect())
+    print(spark.sql('select * from windowed_average').collect())
     #row = spark.sql('select * from df_q').collect()[0]
     #avg = row['avg(price)']
     #date = row['max(date)']
