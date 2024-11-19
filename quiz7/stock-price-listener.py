@@ -9,7 +9,7 @@ from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
-import pyspark.sql.Catalog as sql_c
+import pyspark.sql import Catalog as sql_c
 
 # def get_date_avg(df):
     
