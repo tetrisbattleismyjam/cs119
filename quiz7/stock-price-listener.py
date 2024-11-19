@@ -65,7 +65,7 @@ if __name__ == "__main__":
                                     .withColumn('40DayAverage', sql_f.avg('avg(price)').over(window_40))
     
     query = rolling_average.writeStream\
-                .outputMode('Append')\
+                .outputMode('Update')\
                 .format('console')\
                 .start()
 
