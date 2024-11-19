@@ -97,7 +97,7 @@ if __name__ == "__main__":
     while q.isActive:
             rows = spark.sql('select * from aapl10day').tail(1)
             if len(rows) > 0:
-                aapl10dayAvg = rows[1]['avg(price)']
+                aapl10dayAvg = rows[0]['avg(price)']
                 print(aapl10dayAvg)
             
     q.awaitTermination()
