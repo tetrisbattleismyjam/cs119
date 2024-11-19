@@ -93,7 +93,8 @@ if __name__ == "__main__":
                 .option('truncate', False)\
                 .format('memory')\
                 .start()
-    
+
+    time.sleep(5)
     while q.isActive:
             aapl10dayAvg = spark.sql('select * from aapl10day').tail(1)[0]['avg(price)']
             
