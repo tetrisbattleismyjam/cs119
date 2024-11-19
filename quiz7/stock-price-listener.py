@@ -23,7 +23,7 @@ def get_date_avg(df):
     #avg = row['avg(price)']
     #date = row['max(date)']
 
-    #q.stop()
+    q.stop()
     #return (date, avg)
     return (1, 1)
 
