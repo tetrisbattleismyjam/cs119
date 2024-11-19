@@ -12,13 +12,35 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
 def process_batch(df_batch, batch_id):
-    df_batch.persist()
-    df_batch.withColumn('max_date', sql_f.col('date'))\
-            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
-            .filter(sql_f.col('symbol') == 'MSFT')\
-            .agg({'avg(price)': 'avg'}).show()
     
-    df_batch.unpersist()
+    if df_batch.shape[0] > 0:
+        df_batch.persist()
+        
+        msft_avg_10 = df_batch.withColumn('max_date', sql_f.col('date'))\
+                        .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
+                        .filter(sql_f.col('symbol') == 'MSFT')\
+                        .agg({'avg(price)': 'avg'}).collect[0]['avg(avg(price))']
+
+        msft_avg_40 = df_batch.withColumn('max_date', sql_f.col('date'))\
+                        .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),40))\
+                        .filter(sql_f.col('symbol') == 'MSFT')\
+                        .agg({'avg(price)': 'avg'}).collect[0]['avg(avg(price))']
+
+        aapl_avg_10 = df_batch.withColumn('max_date', sql_f.col('date'))\
+                        .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
+                        .filter(sql_f.col('symbol') == 'AAPL')\
+                        .agg({'avg(price)': 'avg'}).collect[0]['avg(avg(price))']
+        
+        aapl_avg_40 = df_batch.withColumn('max_date', sql_f.col('date'))\
+                        .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),40))\
+                        .filter(sql_f.col('symbol') == 'AAPL')\
+                        .agg({'avg(price)': 'avg'}).collect[0]['avg(avg(price))']
+
+        df_batch.unpersist()
+        
+        return (aapl_avg_10, aapl_avg_40, msft_avg_10, msft_avg_40)
+    else:
+        return (None, None, None, None)
     
 if __name__ == "__main__":
     if len(sys.argv) != 3:
