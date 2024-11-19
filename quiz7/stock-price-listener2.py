@@ -84,10 +84,10 @@ if __name__ == "__main__":
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))
     
-    aapl10Day = aaplPrices.withWatermark('date', '11 days').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
-    
+    aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
+    # aapl10Day = aaplPrices.filter(sql sql_f.max('date')
     q = aapl10Day.writeStream\
-                .outputMode('Update')\
+                .outputMode('Append')\
                 .option('truncate', False)\
                 .format('console')\
                 .start()
