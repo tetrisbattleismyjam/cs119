@@ -86,7 +86,7 @@ if __name__ == "__main__":
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))\
                   .withWatermark('date', '41 days')
 
-    # aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '15 minutes')).agg({'price':'avg'})
+    aapl10Day = aaplPrices.groupBy(sql_f.window('date', '10 days', '15 minutes')).agg({'price':'avg'})
     
     q = aaplPrices.writeStream\
               .outputMode('Append')\
