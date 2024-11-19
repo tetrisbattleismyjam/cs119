@@ -128,6 +128,7 @@ if __name__ == "__main__":
     recommendation = []
     while q.isActive:
             time.sleep(10)
+            print("currently have ", len(recommendation), " recommendations")
             rows = spark.sql('select * from aapl10day').tail(1)
             if len(rows) > 0:
                 aapl10dayAvg = rows[0]['avg(price)']
