@@ -40,7 +40,7 @@ if __name__ == "__main__":
     spark.sparkContext.setLogLevel('WARN')
 
     print(host, port)
-    # create streaming dataframe for incoming stock data.
+    # create streaming dataframe for incoming stock data. data coming is as (datetime, msft price, aapl price)
     lines = spark \
             .readStream \
             .format('socket')\
