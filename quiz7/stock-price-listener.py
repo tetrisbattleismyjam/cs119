@@ -40,6 +40,7 @@ def writeToTable(df_batch, batch_id):
     else:
         df_batch.writeTo(msft_tbl).create()
 
+    print(spark.sql('SELECT * FROM aaplPrices').collect())
     df_batch.unpersist()
     
 if __name__ == "__main__":
