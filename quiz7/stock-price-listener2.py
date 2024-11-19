@@ -86,13 +86,7 @@ if __name__ == "__main__":
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))\
                   .withWatermark('date', '41 days')
     
-    seconds10 = 10 * 86400
-    seconds40 = 40 * 86400
-    
-    window10 = Window.orderBy(sql_f.col('date')).rangeBetween(-seconds10, 0)
-    window40 = Window.orderBy(sql_f.col('date')).rangeBetween(-seconds40, 0)
-    
-    aapl10Day = aaplPrices.withColumn('rolling10dayAverage', sql_f.avg('price').over(window10))
+    aapl10Day = aaplPrices.groupBy(sql_f.session_window('date', '10 days')).agg(avg('price').alias('rolling avg'))
     
     q = aapl10Day.writeStream\
               .outputMode('Append')\
