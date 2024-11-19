@@ -11,11 +11,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
 def get_date_avg(df):
-    q = df.writeStream\
-            .queryName('df_q')\
-            .outputMode("complete")\
-            .format("memory") \
-            .start()
+    df.createOrReplaceTempView("windowed_average")
 
 #   print(df)
     print(spark.sql('select * from df_q').collect())
@@ -23,7 +19,7 @@ def get_date_avg(df):
     #avg = row['avg(price)']
     #date = row['max(date)']
 
-    q.stop()
+    # q.stop()
     #return (date, avg)
     return (1, 1)
 
