@@ -56,7 +56,7 @@ if __name__ == "__main__":
     query = day_average.writeStream\
                 .queryName('day_avg')\
                 .outputMode('Complete')\
-                .format('memory')\
+                .format('console')\
                 .foreachBatch(process_batch)\
                 .start()
         
