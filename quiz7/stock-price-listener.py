@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     combined = aapl_10.join(aapl_40,['max(date)'])
     q = combined.writeStream\
-                .outputMode("Update")\
+                .outputMode("Append")\
                 .format("console")\
                 .start()
     
