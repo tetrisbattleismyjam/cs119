@@ -58,19 +58,16 @@ if __name__ == "__main__":
 
     day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg('price').sort('date')
     
-    window_10 = Window.partitionBy('symbol').orderBy(sql_f.col('date').cast('long')).rangeBetween(-(10 * 86400), 0)
-    window_40 = Window.partitionBy('symbol').orderBy(sql_f.col('date').cast('long')).rangeBetween(-(40 * 86400), 0)
-    
-    rolling_average = day_average.withColumn('10DayAverage', sql_f.avg('avg(price)').over(window_10))\
-                                    .withColumn('40DayAverage', sql_f.avg('avg(price)').over(window_40))
-    
-    query = rolling_average.writeStream\
+    query = day_average.writeStream\
+                .queryName('day_avg')\
                 .outputMode('Complete')\
-                .format('console')\
+                .format('memory')\
                 .start()
 
     query.awaitTermination()
-    
+
+    while True:
+        spark.sql('SELECT * FROM day_avg WHERE symbol = "MSFT").show()
     # aaplPrice and msftPrice
     # aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
     # msft_stream = lines_split.select(sql_f.col('date'), sql_f.col('MSFT').alias('price'))
