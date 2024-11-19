@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+c#!/usr/bin/env python3
 import sys
 import pyspark
 import datetime
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 3).alias('AAPL')\
     #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
-    day_average = lines_split.groupby(['date', 'symbol']).avg()
+    day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg()
     query = day_average.writeStream\
                 .outputMode('complete')\
                 .format('console')\
