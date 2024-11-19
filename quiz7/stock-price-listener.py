@@ -4,6 +4,7 @@ import pyspark
 import datetime
 import time
 
+from pyspark.sql.window import Window
 from pyspark import SparkFiles
 from pyspark.conf import SparkConf
 from pyspark.context import SparkContext
@@ -56,8 +57,15 @@ if __name__ == "__main__":
     #                           ,sql_f.element_at(sql_f.split(lines.value, '[\t]'), 2).alias('MSFT'))
 
     day_average = lines_split.select('date', 'symbol', 'price').groupby(['date', 'symbol']).avg('price').sort('date')
-    query = day_average.writeStream\
-                .outputMode('complete')\
+    
+    window_10 = Window.partitionBy('symbol').orderBy('date').rangeBetween(-10, 0)
+    window_40 = Window.partitionBy('symbol').orderBy('date').rangeBetween(-40, 0)
+    
+    rolling_average = day_average.withColumn('10DayAverage', sql_f.avg('avg(price)').over(window_10))\
+                                    .withColumn('40DayAverage', sql_f.avg('avg(price)').over(window_40))
+    
+    query = rolling_average.writeStream\
+                .outputMode('Append')\
                 .format('console')\
                 .start()
 
