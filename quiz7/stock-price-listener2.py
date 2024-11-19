@@ -129,6 +129,9 @@ if __name__ == "__main__":
     while q.isActive:
             time.sleep(10)
             print("currently have ", len(recommendation), " recommendations")
+            print("aapl (10 Day Average, 40 Day Average) ", aapl10dayAvg, aapl40dayAvg)
+            print("msft (10 Day Average, 40 Day Average) ", msft10dayAvg, msft40dayAvg)
+        
             rows = spark.sql('select * from aapl10day').tail(1)
             if len(rows) > 0:
                 aapl10dayAvg = rows[0]['avg(price)']
