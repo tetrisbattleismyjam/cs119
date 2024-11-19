@@ -67,6 +67,7 @@ if __name__ == "__main__":
     
 
     while True:
+        time.sleep(1)
         spark.sql('SELECT * FROM day_avg').show()
 
     query.awaitTermination()
