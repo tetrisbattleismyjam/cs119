@@ -89,8 +89,8 @@ if __name__ == "__main__":
     seconds10 = 10 * 86400
     seconds40 = 40 * 86400
     
-    window10 = Window.orderBy(sql_f.col('date').cast('long')).rangeBetween(-seconds10, 0)
-    window40 = Window.orderBy(sql_f.col('date').cast('long')).rangeBetween(-seconds40, 0)
+    window10 = Window.orderBy(sql_f.col('date')).rangeBetween(-seconds10, 0)
+    window40 = Window.orderBy(sql_f.col('date')).rangeBetween(-seconds40, 0)
     
     aapl10Day = aaplPrices.withColumn('rolling10dayAverage', sql_f.avg('price').over(window10))
     
