@@ -87,7 +87,7 @@ if __name__ == "__main__":
     aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
     # aapl10Day = aaplPrices.filter(sql sql_f.max('date')
     q = aapl10Day.writeStream\
-                .outputMode('Append')\
+                .outputMode('Complete')\
                 .option('truncate', False)\
                 .format('console')\
                 .start()
