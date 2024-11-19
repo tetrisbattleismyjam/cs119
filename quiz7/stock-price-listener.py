@@ -64,8 +64,10 @@ if __name__ == "__main__":
                 .format('memory')\
                 .start()
 
-    spark.sql('SELECT * FROM day_avg').show()
-    print('waiting')
+    while query.isActive:
+        time.sleep(3)
+        spark.sql('SELECT * FROM day_avg').show()
+        
     query.awaitTermination()
     # aaplPrice and msftPrice
     # aapl_stream = lines_split.select(sql_f.col('date'), sql_f.col('AAPL').alias('price'))
