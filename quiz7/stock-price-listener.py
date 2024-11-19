@@ -57,7 +57,7 @@ if __name__ == "__main__":
                 .queryName('day_avg')\
                 .outputMode('Complete')\
                 .format('memory')\
-                .forEachBatch(process_batch)\
+                .foreachBatch(process_batch)\
                 .start()
         
     query.awaitTermination()
