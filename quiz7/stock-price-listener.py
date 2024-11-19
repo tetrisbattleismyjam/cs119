@@ -11,20 +11,14 @@ from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as sql_f
 
-# def get_date_avg(df):
+def process_batch(df_batch, batch_id):
+    df_batch.persist()
+    df_batch.withColumn('max_date', sql_f.col('date'))\
+            .filter(sql_f.col('date') > sql_f.date_sub(sql_f.col('max_date'),10))\
+            .filter('symbol' == 'msft')\
+            .agg({'avg(price)': 'avg'}).show()
     
-#   print(df)
-    # print(spark.sql('select * from windowed_average').collect())
-    #row = spark.sql('select * from df_q').collect()[0]
-    #avg = row['avg(price)']
-    #date = row['max(date)']
-
-    # q.stop()
-    #return (date, avg)
-    # return (1, 1)
-
-                                                                                                                                                                                          
-    
+    df_batch.unpersist()
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: stock-price-listener.py <hostname> <port>")
@@ -63,10 +57,6 @@ if __name__ == "__main__":
                 .outputMode('Complete')\
                 .format('memory')\
                 .start()
-
-    while query.isActive:
-        time.sleep(3)
-        spark.sql('select * from day_avg').show()
         
     query.awaitTermination()
     # aaplPrice and msftPrice
