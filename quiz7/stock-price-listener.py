@@ -67,7 +67,7 @@ if __name__ == "__main__":
     
 
     while True:
-        spark.sql('SELECT * FROM day_avg WHERE symbol = "MSFT"').show()
+        spark.sql('SELECT * FROM day_avg').show()
 
     query.awaitTermination()
     # aaplPrice and msftPrice
