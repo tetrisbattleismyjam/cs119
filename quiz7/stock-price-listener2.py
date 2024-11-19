@@ -84,14 +84,18 @@ if __name__ == "__main__":
                   .select(sql_f.to_timestamp(sql_f.element_at(sql_f.split('value', '[\t]'), 1)).alias('date')\
                                      ,sql_f.element_at(sql_f.split('value', '[\t]'), 3).cast('float').alias('price'))
     
-    aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'})
-    # aapl10Day = aaplPrices.filter(sql sql_f.max('date')
+    aapl10Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'}).sort('window')
+    aapl40Day = aaplPrices.withWatermark('date', '15 minutes').groupBy(sql_f.window('date', '10 days', '2 days')).agg({'price': 'avg'}).sort('window')
+    
     q = aapl10Day.writeStream\
+                .queryName('aapl10Day')\
                 .outputMode('Complete')\
                 .option('truncate', False)\
-                .format('console')\
+                .format('memory')\
                 .start()
-
-
+    
+    while q.isActive:
+            aapl10dayAvg = spark.sql('select * from aapl10day').tail(1)[0]['avg(price)']
+            
     q.awaitTermination()
 
