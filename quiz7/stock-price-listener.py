@@ -21,7 +21,7 @@ aapl_bull = False
 
 def process_batch(df_batch, batch_id):
     
-    if df_batch.shape[0] > 0:
+    if df_batch.count() > 0:
         df_batch.persist()
         global msft_avg_10
         global msft_avg_40
